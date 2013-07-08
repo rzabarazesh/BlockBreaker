@@ -4,6 +4,8 @@
 //ball constructor
 ball::ball () 
 {
+	// loading the ball + setting position mid page
+	// setting first degree
 	load("ball.png");
 	setPositon(250 , 250);
 	angle = 0 ;
@@ -20,27 +22,30 @@ void ball::update(sf::RenderWindow &GameWindow,padel &PlayerPadel,block (&blocks
 		 angle = angle -360 ;
 	 while(angle<-360)
 		 angle = angle +360 ;
+
 	 //converting degree to gradian
 	float degree = (angle*3.141)/180 ;
+
 	//calculating the new positon
 	posx = posx + 0.2*std::sin(degree);
 	posy = posy + 0.2*std::cos(degree);
+
 	//collision with left & right walls
 	if (posx > 500 || posx < 0) 
 		angle = - angle ;
 	//collision with up wall 
 	if( posy <0 )
-		angle = angle -90 ;
+		angle = angle - 2*(angle-90) ;
 	//collision with padle
-	if(( posy >PlayerPadel.getY()-15
+	if(( posy >PlayerPadel.getY()-10
 		&& (posx  >= PlayerPadel.getX()
-		&& posx  < PlayerPadel.getX()+50)))
-		angle = angle -90 -PlayerPadel.getXVelocity()*30;
-	if(( posy >PlayerPadel.getY()-15
-		&& (posx  >= PlayerPadel.getX()+50
-		&& posx  <= PlayerPadel.getX()+100)))
-		angle = angle +90 +PlayerPadel.getXVelocity()*30;
-	
+		&& posx  < PlayerPadel.getX()+100)))
+		
+	{
+		angle = angle - 2*(angle-90) + PlayerPadel.direction*PlayerPadel.getXVelocity()*30 ;
+			
+	}
+
 		//collision with upper and downer side of blocks
 		for (int i = 0 ; i < 5 ; i++)
 			{
@@ -52,11 +57,9 @@ void ball::update(sf::RenderWindow &GameWindow,padel &PlayerPadel,block (&blocks
 						&&blocks[i][j].doesExist
 						)
 							{
-								if (angle<=180)
-								angle = angle-120  ;
-								if (angle>180)
-								angle = angle+120;
-								blocks[i][j].doesExist = false;		
+
+								angle = angle - 2*(angle-90);
+								blocks[i][j].doesExist = false;								
 								brokenBlocksCount +=1 ;
 							}
 					if(posy < blocks[i][j].getY()
@@ -65,11 +68,10 @@ void ball::update(sf::RenderWindow &GameWindow,padel &PlayerPadel,block (&blocks
 						&&blocks[i][j].doesExist
 						)
 							{
-								if (angle<=0)
-								angle = angle-120  ;
-								if (angle>0)
-								angle = angle+120;
+
+								angle = angle - 2*(angle-90);
 								blocks[i][j].doesExist = false;	
+								
 								brokenBlocksCount +=1 ;
 							}
 				}

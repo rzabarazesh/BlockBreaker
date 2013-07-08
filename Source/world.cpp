@@ -3,7 +3,7 @@
 
 world::world () 
 {		// creating the game window
-		GameWindow.create(sf::VideoMode(500,500),"Brick Breaker v0.1");
+		GameWindow.create(sf::VideoMode(500,500),"Block Breaker v0.2a");
 
 		// showing the splash screen
 		GameSplashScreen = new SplashScreen ;
@@ -14,6 +14,14 @@ world::world ()
 		MenuScreen = new menu ;
 		MenuScreen->show(GameWindow);
 		delete MenuScreen ;
+
+		//setting up the score ( to 0	)	
+		showScore(0);
+
+		sf::Font scoreFont ;
+		scoreFont.loadFromFile("dlxfont.ttf");
+		score.setFont(scoreFont);
+		score.setPosition(20,450);
 		
 		//setting up the blocks
 		sf::Texture BlockTexture;
@@ -30,10 +38,12 @@ world::world ()
 		drawBlocks();
 		GameWindow.display();
 		
+		
 		// entering the game loop
 			while(true)
 			{
 				GameLoop();
+				//sf::sleep(sf::microseconds(2000));
 			}
 }
 void world::drawBlocks()
@@ -75,17 +85,29 @@ void world::GameLoop()
 void world::updateWorld() 
 {
 
-	if ((int(WorldTime.getElapsedTime().asSeconds() *1000) ) % 2 == 1 )
+	if ((int(WorldTime.getElapsedTime().asSeconds() *700) ) % 2 == 1 )
 
 	{
 		PlayerPadel.update(GameWindow);
 		GameBall.update(GameWindow,PlayerPadel,blocks);
-		GameWindow.clear(sf::Color(150,0,255));
+
+		
+		GameWindow.clear(sf::Color(100,30,240));
+		
 		PlayerPadel.draw(GameWindow);
 		GameBall.draw(GameWindow);
 		drawBlocks();
+		showScore(GameBall.brokenBlocksCount*10);
+		sf::sleep(sf::microseconds(300));
 		GameWindow.display();
 		WorldTime.restart();
 	}
 
+}
+
+void world::showScore(int scr)
+{
+	scoreString = std::to_string(scr) ;
+	score.setString(scoreString);
+	GameWindow.draw(score); 
 }
