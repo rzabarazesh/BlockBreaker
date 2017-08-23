@@ -1,5 +1,7 @@
-A simple game written in c++ (w sfml)
+BlockBreaker
 ------------------------------------
+A simple game written in c++ (w sfml)
+
 KNOWN BUGS 
 ==========
 1.  pressing left and right arrows at the same time causes strange behavior in the padle motion
